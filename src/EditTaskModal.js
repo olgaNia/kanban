@@ -1,41 +1,22 @@
 import React, {useState} from 'react';
 import {Button, Modal, ModalHeader, ModalBody, ModalFooter, InputGroup, InputGroupText, Input} from 'reactstrap';
 
-function CreateTaskModal({priorities, statuses,createTask}) {
+function EditTaskModal({modalEdit,toggleEdit,priorities,statuses,task,editTask}) {
+    const [status, setStatus] = useState(task.status)
+    const [name, setName] = useState(task.name)
+    const [description, setDescription] = useState(task.description)
+    const [priority, setPriority] = useState(task.priority)
 
-    const [modal, setModal] = useState(false);
-    const [name, setName] = useState('')
-    const [description, setDescription] = useState('')
-    const [priority, setPriority] = useState(priorities[0])
-
-    const [status, setStatus] = useState(statuses[0])
-    const toggle = () => {
-        setModal(!modal)
-        setName('')
-        setDescription('')
-        setPriority(priorities[0])
-        setStatus(statuses[0])
-    };
-
-    const saveButtonHandler = () => {
-        const newTask = {
-            name,
-            description,
-            priority,
-            status
-        }
-        createTask(newTask)
-        toggle()
-
+    const onSave=()=>{
+        const newTask ={ status,priority,name,description}
+        editTask(task._id,newTask)
+        toggleEdit()
     }
 
     return (
         <div>
-            <Button color="btn btn-outline-success" onClick={toggle}>
-                Create New Task
-            </Button>
-            <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>Create new task</ModalHeader>
+            <Modal isOpen={modalEdit} toggle={toggleEdit}>
+                <ModalHeader toggle={toggleEdit}>Edit task</ModalHeader>
                 <ModalBody>
                     <div>
                         <InputGroup>
@@ -44,26 +25,29 @@ function CreateTaskModal({priorities, statuses,createTask}) {
                             </InputGroupText>
                             <Input
                                 value={name}
-                                onChange={(event) => setName(event.target.value)}
+                                onChange={(event)=> setName(event.target.value)}
                             />
                         </InputGroup>
                         <br/>
                         <InputGroup>
+
                             <InputGroupText>
                                 Task Description
                             </InputGroupText>
                             <Input
                                 value={description}
-                                onChange={(event) => setDescription(event.target.value)}
+                                onChange={(event)=> setDescription(event.target.value)}
                             />
                         </InputGroup>
-                        <br/>
-                        <div className="form-floating">
-                            <select className="form-select" id="floatingSelect"
-                                    aria-label="Floating label select example"
-                                    value={priority}
-                                    onChange={(event) => setPriority(event.target.value)}>
 
+                        <br/>
+
+                        <div className="form-floating">
+                            <select
+                                value={priority}
+                                onChange={(event)=>setPriority(event.target.value)}
+                                className="form-select" id="floatingSelect"
+                                    aria-label="Floating label select example">
                                 {priorities.map((el, i) =>
                                     <option value={el}
                                             key={i}>
@@ -77,10 +61,11 @@ function CreateTaskModal({priorities, statuses,createTask}) {
                         <br/>
 
                         <div className="form-floating">
-                            <select className="form-select" id="floatingSelect"
-                                    aria-label="Floating label select example"
-                                    value={status}
-                                    onChange={(event) => setStatus(event.target.value)}>
+                            <select
+                                value={status}
+                                onChange={(event)=>setStatus(event.target.value)}
+                                className="form-select" id="floatingSelect"
+                                    aria-label="Floating label select example">
                                 {statuses.map((el, i) =>
                                     <option value={el}
                                             key={i}>
@@ -92,21 +77,20 @@ function CreateTaskModal({priorities, statuses,createTask}) {
                         </div>
 
                     </div>
-
                 </ModalBody>
                 <ModalFooter>
                     <Button
-                        color="btn btn-outline-primary"
-                        onClick={saveButtonHandler}>
+                        onClick={onSave}
+                        color="btn btn-outline-primary">
                         Save
                     </Button>{' '}
-                    <Button color="btn btn-outline-secondary" onClick={toggle}>
+                    <Button color="btn btn-outline-secondary" onClick={toggleEdit}>
                         Cancel
                     </Button>
                 </ModalFooter>
-            </Modal>
+            </Modal >
         </div>
     );
 }
 
-export default CreateTaskModal;
+export default EditTaskModal;

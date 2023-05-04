@@ -51,7 +51,16 @@ function App() {
             .then(res=> getTasks())
             .catch(err=> alert('Try again later'))
     }
-
+function editTask(id,newTask){
+        axios.patch(`https://expressjs-server.vercel.app/tasks/${id}`,newTask)
+            .then(res=> getTasks())
+            .catch(err=> alert('Failed to change'))
+}
+function deleteTask(id){
+        axios.delete(`https://expressjs-server.vercel.app/tasks/${id}`)
+            .then (res=> getTasks())
+            .catch(err=> alert('Tasks are not defined'))
+}
 
 
     return (
@@ -61,8 +70,8 @@ function App() {
               <CreateTaskModal
                   priorities={priorities}
                   statuses={statuses.map(status => status.title)}
-                  createTask={createTask}
-              />
+                  createTask={createTask}/>
+
                 <div className="row align-items-start">
                     {statuses.map(status =>
                         <Column
@@ -73,6 +82,8 @@ function App() {
                             priorities={priorities}
                             changeStatus={changeStatus}
                             statuses={statuses.map(status => status.title)}
+                            editTask={editTask}
+                            deleteTask={deleteTask}
                         />
                     )}
                 </div>

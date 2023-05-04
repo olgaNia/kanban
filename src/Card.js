@@ -1,6 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
+import EditTaskModal from "./EditTaskModal";
+import DeleteTaskModal from "./DeleteTaskModal";
 
 const Card = (props) => {
+    const [modalEdit, setModalEdit] = useState(false);
+    const [modalDelete, setModalDelete] = useState(false);
+    const toggleEdit = () => {
+        setModalEdit(!modalEdit)
+    };
+    const toggleDelete = () => {
+        setModalDelete(!modalDelete)
+    };
     const priorityToWord = (number) => {
         switch (number) {
             case 1:
@@ -18,10 +28,8 @@ const Card = (props) => {
                 return "high"
             default:
                 return "low"
-
         }
     }
-
     return (
         <div className="card" style={{marginBottom: '10px'}}>
             <div className="card-body">
@@ -30,46 +38,70 @@ const Card = (props) => {
             </div>
             <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                <button
-                    onClick={()=> props.changeStatus(props.task._id,props.task.status,-1)}
-                    disabled={props.statuses[0]=== props.task.status}
-                    type="button"
-                    className="btn btn-outline-info">
-                    ←
-                </button>
+                    <button
+                        onClick={() => props.changeStatus(props.task._id, props.task.status, -1)}
+                        disabled={props.statuses[0] === props.task.status}
+                        type="button"
+                        className="btn btn-outline-info">
+                        ←
+                    </button>
                     {' '}
-               {props.task.status}
+                    {props.task.status}
                     {' '}
-                <button
-                    onClick={()=> props.changeStatus(props.task._id,props.task.status,1)}
-                    disabled={props.statuses[props.statuses.length-1]=== props.task.status}
-                    type="button"
-                    className="btn btn-outline-info">
-                    →
-                </button>
-
+                    <button
+                        onClick={() => props.changeStatus(props.task._id, props.task.status, 1)}
+                        disabled={props.statuses[props.statuses.length - 1] === props.task.status}
+                        type="button"
+                        className="btn btn-outline-info">
+                        →
+                    </button>
                 </li>
-                <li className="list-group-item">Priority:{props.task.priority} {priorityToWord(+props.task.priority)}{' '}
-
+                <li className="list-group-item">
+                    Priority: {props.task.priority} {priorityToWord(+props.task.priority)}{' '}
                     <button
                         onClick={() => props.changePriority(props.task._id, +props.task.priority + 1)}
                         disabled={props.priorities[props.priorities.length - 1] === +props.task.priority}
                         type="button"
-                        className="btn btn-outline-primary btn-sm">↑
+                        className="btn btn-outline-primary btn-sm">
+                        ↑
                     </button>
                     <button
                         onClick={() => props.changePriority(props.task._id, +props.task.priority - 1)}
                         disabled={props.priorities[0] === +props.task.priority}
                         type="button"
-                        className="btn btn-outline-primary btn-sm">↓
+                        className="btn btn-outline-primary btn-sm">
+                        ↓
                     </button>
                 </li>
-
             </ul>
             <div className="card-body">
 
-                <button type="button" className="btn btn-outline-warning">Update</button>
-                <button type="button" className="btn btn-outline-danger">Delete</button>
+                <button
+                    onClick={toggleEdit}
+                    type="button"
+                    className="btn btn-outline-warning">
+                    Edit
+                </button>
+                <button onClick={toggleDelete}
+                        type="button"
+                        className="btn btn-outline-danger">
+                    Delete
+                </button>
+
+                <EditTaskModal
+                    toggleEdit={toggleEdit}
+                    modalEdit={modalEdit}
+                    priorities={props.priorities}
+                    statuses={props.statuses}
+                    task={props.task}
+                    editTask={props.editTask}
+                />
+                <DeleteTaskModal
+                    toggleDelete={toggleDelete}
+                    modalDelete={modalDelete}
+                    deleteTask={props.deleteTask}
+                    task={props.task}
+                />
 
             </div>
         </div>
